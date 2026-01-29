@@ -1,0 +1,52 @@
+import { client } from '../db/db';
+import { DataTypes } from 'sequelize';
+import { tnames, fnames, ent } from '../static';
+
+const nms = fnames[ent.usr];
+
+const User = client.define(
+  'User',
+  {
+    [nms.id]: {
+      type: DataTypes.UUIDV4,
+      primaryKey: true,
+      defaultValue: DataTypes.UUIDV4,
+    },
+    [nms.name]: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    [nms.email]: {
+      type: DataTypes.STRING,
+      allowNull: false,
+      unique: true,
+    },
+    [nms.pwd]: {
+      type: DataTypes.STRING,
+      allowNull: false,
+    },
+    [nms.act]: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+      defaultValue: false,
+    },
+    createdAt: {
+      type: DataTypes.DATE,
+      field: 'created_at',
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+    updatedAt: {
+      type: DataTypes.DATE,
+      field: 'updated_at',
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
+  },
+  {
+    tableName: tnames[ent.usr],
+    timestamps: true,
+  },
+);
+
+export default User;
