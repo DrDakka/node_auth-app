@@ -1,5 +1,6 @@
 import http from 'http';
-import { BodyNotJSONError, MaxSizeError, RequestCancelledError } from '../errors/errors';
+import { RequestError } from '../errors';
+import { httpStatus } from '../static';
 const maxSizeLimit = 1048576;
 
 async function parseBody(req: http.IncomingMessage, maxSize = maxSizeLimit) {
@@ -25,7 +26,7 @@ async function parseBody(req: http.IncomingMessage, maxSize = maxSizeLimit) {
       if (size > maxSize && !settled) {
         settled = true;
         req.destroy();
-        reject(new MaxSizeError());
+        reject(new RequestError('Body max size exceeded', httpStatus.br));
 
         return;
       }
@@ -47,7 +48,7 @@ async function parseBody(req: http.IncomingMessage, maxSize = maxSizeLimit) {
       } catch {
         if (!settled) {
           settled = true;
-          reject(new BodyNotJSONError());
+          reject(new RequestError('Expected JSON', httpStatus.br));
         }
       }
     });
@@ -55,7 +56,7 @@ async function parseBody(req: http.IncomingMessage, maxSize = maxSizeLimit) {
     req.on('close', () => {
       if (!settled) {
         settled = true;
-        reject(new RequestCancelledError());
+        reject(new RequestError('Request cancelled', httpStatus.br));
       }
     });
   });

@@ -1,80 +1,37 @@
 import { httpStatus } from '../static';
 import { type HTTPStatus } from '../static/types';
 
-enum StaticErrorsMsgs {
-  nf = 'Not found',
-  na = 'Method not allowed',
-  ms = 'Exceeded body size limits',
-  br = 'Bad request',
-  bnj = 'Expected body to be JSON',
-  rc = 'Request cancelled',
-}
-
-class ValidationError extends Error {
+class RequestError extends Error {
   statusCode: HTTPStatus;
 
   constructor(message: string, statusCode: HTTPStatus) {
-    super(message);
+    super();
     this.statusCode = statusCode;
     this.name = this.constructor.name;
+    this.message = message;
   }
 }
 
-class NotFoundError extends Error {
+class DBError extends Error {
   statusCode: HTTPStatus;
 
-  constructor() {
-    super(StaticErrorsMsgs.nf);
-    this.statusCode = httpStatus.nf;
+  constructor(message: string) {
+    super();
+    this.statusCode = httpStatus.se;
     this.name = this.constructor.name;
+    this.message = message;
   }
 }
 
-class NotAllowedError extends Error {
+class AuthError extends Error {
   statusCode: HTTPStatus;
 
-  constructor() {
-    super(StaticErrorsMsgs.na);
+  constructor(message: string) {
+    super();
     this.statusCode = httpStatus.na;
     this.name = this.constructor.name;
+    this.message = message;
   }
 }
 
-class MaxSizeError extends Error {
-  statusCode: HTTPStatus;
-
-  constructor() {
-    super(StaticErrorsMsgs.ms);
-    this.statusCode = httpStatus.br;
-    this.name = this.constructor.name;
-  }
-}
-
-class BodyNotJSONError extends Error {
-  statusCode: HTTPStatus;
-
-  constructor() {
-    super(StaticErrorsMsgs.bnj);
-    this.statusCode = httpStatus.br;
-    this.name = this.constructor.name;
-  }
-}
-
-class RequestCancelledError extends Error {
-  statusCode: HTTPStatus;
-
-  constructor() {
-    super(StaticErrorsMsgs.rc);
-    this.statusCode = httpStatus.br;
-    this.name = this.constructor.name;
-  }
-}
-
-export { 
-  ValidationError,
-  NotFoundError,
-  RequestCancelledError,
-  NotAllowedError,
-  MaxSizeError,
-  BodyNotJSONError 
-};
+export { RequestError, DBError, AuthError };

@@ -1,10 +1,10 @@
 import { client } from '../db/db';
 import { DataTypes } from 'sequelize';
-import { tnames, fnames, ent } from '../static'
+import { TNAMES, fnames } from '../static'
 
-const nms = fnames[ent.soc];
+const nms = fnames[TNAMES.SCN]
 
-const SocAcc = client.define(
+const SocialAccount = client.define(
   'SocialAccount',
   {
     [nms.id]: {
@@ -16,8 +16,8 @@ const SocAcc = client.define(
       type: DataTypes.UUIDV4,
       allowNull: false,
       references: {
-        model: tnames[ent.usr],
-        key: fnames[ent.usr].id,
+        model: TNAMES.USR,
+        key: fnames[TNAMES.USR].id,
       },
       onDelete: 'CASCADE',
     },
@@ -35,10 +35,10 @@ const SocAcc = client.define(
     },
   },
   {
-    tableName: tnames[ent.soc],
+    tableName: TNAMES.SCN,
     createdAt: false,
     updatedAt: false,
   },
 );
 
-export default SocAcc;
+export default SocialAccount;

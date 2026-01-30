@@ -1,8 +1,8 @@
 import { client } from '../db/db';
 import { DataTypes } from 'sequelize';
-import { tnames, fnames, ent } from '../static';
+import { TNAMES, fnames } from '../static';
 
-const nms = fnames[ent.usr];
+const nms = fnames[TNAMES.USR];
 
 const User = client.define(
   'User',
@@ -44,7 +44,7 @@ const User = client.define(
     },
   },
   {
-    tableName: tnames[ent.usr],
+    tableName: TNAMES.USR,
     timestamps: true,
   },
 );

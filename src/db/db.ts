@@ -1,5 +1,6 @@
 'use strict';
 import { Sequelize } from 'sequelize';
+import { DBError } from '../errors';
 
 const {
   POSTGRES_HOST,
@@ -19,13 +20,15 @@ const client = new Sequelize({
 });
 
 const dbSetup = async () => {
-  const { User, Token, SocAcc } = await import('../model');
+  try {
+    const { default: DB } = await import('../model');
 
-  await User.sync({ alter: true });
-  await Token.sync({ alter: true });
-  await SocAcc.sync({ alter: true });
+    await Promise.all(
+      Object.values(DB).map((model) => model.sync({ alter: true })),
+    );
+  } catch (error) {
+    throw new DBError(`Database setup failed: ${error}`)
+  }
+};
 
-  console.log('DB UP');
-}
-
-export { client, dbSetup }
+export { client, dbSetup };

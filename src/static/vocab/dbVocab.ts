@@ -1,31 +1,25 @@
-const ent = {
-  usr: 'user',
-  soc: 'soc',
-  tkn: 'token',
-} as const;
-
-const tnames = {
-  [ent.usr]: 'users',
-  [ent.soc]: 'social_accounts',
-  [ent.tkn]: 'tokens',
-} as const;
+enum  TNAMES {
+  USR = 'users',
+  SCN = 'social_accounts',
+  TKN = 'tokens',
+};
 
 const fnames = {
-  [ent.usr]: {
+  [TNAMES.USR]: {
     id: 'id',
     name: 'name',
     email: 'email',
     pwd: 'password',
     act: 'activated',
   },
-  [ent.soc]: {
+  [TNAMES.SCN]: {
     id: 'id',
     usr: 'userId',
     ggl: 'google',
     gh: 'github',
     fb: 'facebook',
   },
-  [ent.tkn]: {
+  [TNAMES.TKN]: {
     id: 'id',
     usr: 'userId',
     token: 'token',
@@ -34,4 +28,11 @@ const fnames = {
   },
 } as const;
 
-export { tnames, fnames, ent };
+enum TKN {
+  ACT = 'activation',
+  RFR = 'refresh',
+  PWR = 'password_reset',
+  ACC = 'access',
+}
+
+export { TNAMES, fnames, TKN };

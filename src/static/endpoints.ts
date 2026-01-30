@@ -1,13 +1,13 @@
 const endpt = {
-  idx: '/', // get page
-  auth: '/auth', // post user
-  snauth: '/auth/social', // post user
-  lgout: '/auth/logout', //
-  reg: '/register', // techical endpoint '' '/' '/index.html'
-  act: '/register/activate', // technical endpoint '/login/hash/'
-  acc: '/profile', // profile, update profile, delete profile
+  idx: '/',
+  auth: '/auth',
+  snauth: '/auth/social',
+  lgout: '/auth/logout',
+  reg: '/register',
+  act: '/register/activate',
+  acc: '/profile',
   pwd: '/profile/password',
-  pwdReq: '/password/reset-request', // res password
+  pwdReq: '/password/reset-request',
   pwdRes: '/password/reset',
 } as const;
 

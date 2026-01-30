@@ -2,6 +2,7 @@ import http from 'http';
 import { dbSetup } from './db/db';
 import { validateRequest } from './validation';
 import { parseBody } from './middleware';
+import getRouteConfig from './router/router';
 
 // Options preflight
 // query params in req
@@ -10,26 +11,28 @@ import { parseBody } from './middleware';
 // cookies parser
 // JSW tokens
 
-
-
 export async function createServer() {
   await dbSetup();
 
   return http.createServer(async (req, res) => {
     try {
-      const { auth, schema, controller } = validateRequest(req);
+      const { endpoint, method } = validateRequest(req);
+
+      const { auth, schema, controller } = getRouteConfig(endpoint, method);
 
       if (auth) {
         const authHeader = req.headers.authorization;
-        validateAuth(authHeader) 
+        validateAuth(authHeader);
       }
 
       if (schema) {
         const body = await parseBody(req);
-        validateBody(body, schema)
+        validateBody(body, schema);
       }
 
       const result = controller(body);
-    } catch {}
+    } catch (error) {
+      
+    }
   });
 }

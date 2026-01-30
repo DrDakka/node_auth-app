@@ -1,8 +1,8 @@
 import { client } from '../db/db';
 import { DataTypes } from 'sequelize';
-import { tnames, fnames, ent } from '../static';
+import { TNAMES, fnames, TKN } from '../static';
 
-const nms = fnames[ent.tkn];
+const nms = fnames[TNAMES.TKN];
 
 const Token = client.define(
   'Token',
@@ -16,8 +16,8 @@ const Token = client.define(
       type: DataTypes.UUIDV4,
       allowNull: false,
       references: {
-        model: tnames[ent.usr],
-        key: fnames[ent.usr].id,
+        model: TNAMES.USR,
+        key: fnames[TNAMES.USR].id,
       },
       onDelete: 'CASCADE',
     },
@@ -27,7 +27,7 @@ const Token = client.define(
       unique: true,
     },
     [nms.type]: {
-      type: DataTypes.ENUM('activation', 'password_reset', 'refresh'),
+      type: DataTypes.ENUM(TKN.ACT, TKN.PWR, TKN.RFR),
       allowNull: false,
     },
     [nms.exp]: {
@@ -36,7 +36,7 @@ const Token = client.define(
     },
   },
   {
-    tableName: tnames[ent.tkn],
+    tableName: TNAMES.TKN,
     createdAt: true,
     updatedAt: false,
   },

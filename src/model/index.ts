@@ -1,5 +1,12 @@
 import User from './user.model';
-import SocAcc from './socialAccounts.model';
+import SocialAccount from './socialAccounts.model';
 import Token from './token.model';
+import { TNAMES } from '../static';
 
-export { User, SocAcc, Token };
+const DB = {
+  [TNAMES.USR]: User,
+  [TNAMES.SCN]: SocialAccount,
+  [TNAMES.TKN]: Token,
+}
+
+export default DB;
