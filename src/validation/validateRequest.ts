@@ -3,6 +3,10 @@ import { RequestError } from '../errors';
 import { httpStatus, mthd, endpt } from '../static';
 import { type Method, type Endpoint } from '../static/types';
 
+const REQUIRED_PARAMS: Partial<Record<Endpoint, string>> = {
+  [endpt.act]: 'token',
+};
+
 const validatePath = (path: string): path is Endpoint => {
   return Object.values(endpt).some((el) => el === path);
 };
@@ -29,7 +33,16 @@ function validateRequest(req: http.IncomingMessage) {
     throw new RequestError(`Unknown method: ${method}`, httpStatus.br);
   }
 
-  return { endpoint, method };
+  if (!(endpoint in REQUIRED_PARAMS)) {
+    return { endpoint, method, param: null };
+  }
+  const param = url.searchParams.get(REQUIRED_PARAMS[endpoint] as string);
+
+  if (!param) {
+    throw new RequestError('Missing required token parameter', httpStatus.br);
+  }
+
+  return { endpoint, method, param };
 }
 
 export { validateRequest };

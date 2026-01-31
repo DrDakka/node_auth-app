@@ -1,10 +1,11 @@
 import { RequestError } from '../errors';
 import { Endpoint, endpt } from '../static/endpoints';
 import { httpStatus, Method, mthd } from '../static/vocab/httpVocab';
+import sch from '../validation/schemas';
 
 type Entr = {
   auth: boolean;
-  schema: false | Object;
+  schema: false | typeof sch[];
   controller: () => void;
 };
 
@@ -19,13 +20,13 @@ const routeMap = {
     [mthd.post]: { auth: false, schema: sch.authSN, controller: () => true },
   },
   [endpt.lgout]: {
-    [mthd.patch]: { auth: true, schema: sch.lgout, controller: () => true },
+    [mthd.patch]: { auth: true, schema: false, controller: () => true },
   },
   [endpt.reg]: {
     [mthd.post]: { auth: false, schema: sch.reg, controller: () => true },
   },
   [endpt.act]: {
-    [mthd.get]: { auth: false, schema: sch.act, controller: () => true },
+    [mthd.get]: { auth: false, schema: false, controller: () => true },
   },
   [endpt.acc]: {
     [mthd.get]: { auth: true, schema: false, controller: () => true },
@@ -36,7 +37,7 @@ const routeMap = {
     [mthd.patch]: { auth: true, schema: sch.pwdPtch, controller: () => true },
   },
   [endpt.pwdReq]: {
-    [mthd.post]: { auth: false, schema: sch.pwdRes, controller: () => true },
+    [mthd.post]: { auth: false, schema: sch.pwdReq, controller: () => true },
   },
   [endpt.pwdRes]: {
     [mthd.post]: { auth: false, schema: sch.newPwd, controller: () => true },

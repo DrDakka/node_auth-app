@@ -16,7 +16,7 @@ export async function createServer() {
 
   return http.createServer(async (req, res) => {
     try {
-      const { endpoint, method } = validateRequest(req);
+      const { endpoint, method, param } = validateRequest(req);
 
       const { auth, schema, controller } = getRouteConfig(endpoint, method);
 

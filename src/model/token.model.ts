@@ -34,10 +34,15 @@ const Token = client.define(
       type: DataTypes.DATE,
       allowNull: false,
     },
+    createdAt: {
+      type: DataTypes.DATE,
+      field: 'created_at',
+      allowNull: false,
+      defaultValue: DataTypes.NOW,
+    },
   },
   {
     tableName: TNAMES.TKN,
-    createdAt: true,
     updatedAt: false,
   },
 );
