@@ -1,11 +1,3 @@
-const pages = {
-  idx: '/',
-  lgin: '/login',
-  prof: '/profile',
-  act: '/activate',
-} as const;
-
-
 const mthd = {
   get: 'GET',
   post: 'POST',
@@ -26,4 +18,4 @@ const httpStatus = {
 type Method = typeof mthd[keyof typeof mthd];
 type HTTPStatus = typeof httpStatus[keyof typeof httpStatus];
 
-export { pages, mthd, httpStatus, type Method, type HTTPStatus };
+export { mthd, httpStatus, type Method, type HTTPStatus };

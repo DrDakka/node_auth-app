@@ -1,28 +1,34 @@
 import { DBError, RequestError } from '../errors';
 import DB from '../model';
 import { fnames, httpStatus, TNAMES } from '../static';
+import { ObjectMapType } from './types';
 
-const get = async (table: TNAMES, key: string) => {
+const get = async <T extends TNAMES>(table: T, key: string): Promise<ObjectMapType[T]> => {
   const item = await DB[table].findByPk(key);
 
   if (!item) {
     throw new RequestError(`Id not found: ${key}`, httpStatus.nf);
   }
 
-  return item;
+  return item.toJSON();
 };
 
-const del = async (table: TNAMES, key: string) => {
-  const item = await get(table, key);
+const del = async (table: TNAMES, key: string): Promise<void> => {
+  // Нужен Model instance для destroy, не plain object
+  const item = await DB[table].findByPk(key);
 
-  item.destroy();
+  if (!item) {
+    throw new RequestError(`Id not found: ${key}`, httpStatus.nf);
+  }
+
+  await item.destroy();
 };
 
 const getByParam = async <T extends TNAMES>(
   table: T,
   field: (typeof fnames)[T][keyof (typeof fnames)[T]],
   query: string,
-) => {
+): Promise<ObjectMapType[T]> => {
   const item = await DB[table].findOne({ where: { [field as string]: query } });
 
   if (!item) {
@@ -32,11 +38,7 @@ const getByParam = async <T extends TNAMES>(
     );
   }
 
-  return item;
+  return item.toJSON();
 };
-
-const create = async (table: TNAMES, obj) => {
-
-}
 
 export { get, del, getByParam };

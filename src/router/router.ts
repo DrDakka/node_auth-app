@@ -1,3 +1,4 @@
+import { idx } from '../controllers';
 import { RequestError } from '../errors';
 import { Endpoint, endpt } from '../static/endpoints';
 import { httpStatus, Method, mthd } from '../static/vocab/httpVocab';
@@ -11,10 +12,13 @@ type Entr = {
 
 const routeMap = {
   [endpt.idx]: {
-    [mthd.get]: { auth: false, schema: false, controller: () => true },
+    [mthd.get]: { auth: false, schema: false, controller: idx },
   },
   [endpt.auth]: {
     [mthd.post]: { auth: false, schema: sch.auth, controller: () => true },
+  },
+  [endpt.refr]: {
+    [mthd.post]: { auth: false, schema: sch.refr, controller: () => true },
   },
   [endpt.snauth]: {
     [mthd.post]: { auth: false, schema: sch.authSN, controller: () => true },

@@ -3,17 +3,21 @@ import { endpt, fnames, TNAMES } from '../static';
 const usrFNames = fnames[TNAMES.USR];
 const tkFNames = fnames[TNAMES.TKN];
 
+const authSch = {
+  [usrFNames.email]: 'string',
+  [usrFNames.pwd]: 'string',
+};
+
+const regSch = {
+  [usrFNames.name]: 'string',
+  [usrFNames.email]: 'string',
+  [usrFNames.pwd]: 'string',
+} as const;
 const sch = {
-  auth: {
-    [usrFNames.email]: 'string',
-    [usrFNames.pwd]: 'string',
-  },
+  auth: authSch,
   authSN: {},
-  reg: {
-    [usrFNames.name]: 'string',
-    [usrFNames.email]: 'string',
-    [usrFNames.pwd]: 'string',
-  },
+  refr: {},
+  reg: regSch,
   profUpd: {
     [usrFNames.name]: 'string',
     [usrFNames.email]: 'string',
@@ -33,6 +37,6 @@ const sch = {
     newPassword: 'string',
     confirmation: 'string',
   },
-} as const;
+};
 
 export default sch;

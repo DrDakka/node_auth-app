@@ -1,11 +1,10 @@
 import http from 'http';
 import { dbSetup } from './db/db';
 import { validateRequest } from './validation';
-import { parseBody } from './middleware';
+import { parseBody, validateAuth } from './middleware';
 import getRouteConfig from './router/router';
 
 // Options preflight
-// query params in req
 // Unified api response
 // rate limiter mdw
 // cookies parser
@@ -20,19 +19,19 @@ export async function createServer() {
 
       const { auth, schema, controller } = getRouteConfig(endpoint, method);
 
+      let body = null;
       if (auth) {
         const authHeader = req.headers.authorization;
-        validateAuth(authHeader);
+
+        body = validateAuth(authHeader);
       }
 
       if (schema) {
-        const body = await parseBody(req);
+        body = await parseBody(req);
         validateBody(body, schema);
       }
 
       const result = controller(body);
-    } catch (error) {
-      
-    }
+    } catch (error) {}
   });
 }
