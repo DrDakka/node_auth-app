@@ -45,4 +45,4 @@ function validateRequest(req: http.IncomingMessage) {
   return { endpoint, method, param };
 }
 
-export { validateRequest };
+export default validateRequest;

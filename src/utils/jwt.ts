@@ -1,45 +1,22 @@
 import jwt from 'jsonwebtoken';
 import { RequestError } from '../errors';
-import { fnames, httpStatus, TKN, TNAMES } from '../static';
+import { httpStatus, TKN, TOKEN_EXPIRY } from '../static';
+import { JWTPayload } from './types';
 
-const SECRET_KEY = process.env.JWT_SECRET || 'your-secret-key';
+const SECRET_KEY = process.env.JWT_SECRET || '7>?~!id(#;fd13/^^$fdkq124<';
 
-const TOKEN_EXPIRY: Record<TKN, string> = {
-  [TKN.ACC]: '15m', // access token - 15 минут
-  [TKN.RFR]: '7d', // refresh token - 7 дней
-  [TKN.ACT]: '24h', // activation token - 24 часа
-  [TKN.PWR]: '1h', // password reset token - 1 час
-};
+type Signed = { expiry: string; token: string };
 
-const nms = fnames[TNAMES.USR];
+function signToken(payload: JWTPayload, type: TKN): Signed {
+  const expiry = TOKEN_EXPIRY[type][0];
 
-type JWTPayload = {
-  [nms.id]: string;
-  [nms.name]: string;
-  [nms.email]: string;
-};
-
-function signToken(
-  payload: JWTPayload,
-  type: TKN,
-): { expiry: string; token: string } {
-  const expiry = TOKEN_EXPIRY[type];
-
-  const token = jwt.sign(
-    {
-      ...payload,
-      type,
-    },
-    SECRET_KEY,
-    { expiresIn: expiry } as jwt.SignOptions,
-  );
+  const token = jwt.sign({ ...payload, type }, SECRET_KEY, {
+    expiresIn: expiry,
+  } as jwt.SignOptions);
 
   return { expiry, token };
 }
 
-/**
- * Проверяет и декодирует JWT токен
- */
 function verifyToken(token: string): JWTPayload & { type: TKN } {
   try {
     const decoded = jwt.verify(token, SECRET_KEY) as JWTPayload & {
@@ -59,18 +36,14 @@ function verifyToken(token: string): JWTPayload & { type: TKN } {
     throw new RequestError('Token verification failed', httpStatus.br);
   }
 }
+const jwtAct = {
+  sign: (pl: JWTPayload, tp: TKN) => signToken(pl, tp),
+  ver: (tk: string) => verifyToken(tk),
+  create: {
+    [TKN.ACC]: (payload: JWTPayload): Signed => signToken(payload, TKN.ACC),
+    [TKN.RFR]: (payload: JWTPayload): Signed => signToken(payload, TKN.RFR),
+  },
+};
 
-async function createAccessToken(
-  payload: JWTPayload,
-): Promise<{ expiry: string; token: string }> {
-  return signToken(payload, TKN.ACC);
-}
-
-async function createRefreshToken(
-  payload: JWTPayload,
-): Promise<{ expiry: string; token: string }> {
-  return signToken(payload, TKN.RFR);
-}
-
-export { signToken, verifyToken, createAccessToken, createRefreshToken };
+export default jwtAct;
 export type { JWTPayload };

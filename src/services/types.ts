@@ -1,6 +1,6 @@
 import { TKN, TNAMES } from "../static";
 
-interface UserAttributes {
+interface DBResUsr {
   id: string;
   name: string;
   email: string;
@@ -10,7 +10,7 @@ interface UserAttributes {
   updatedAt: Date;
 }
 
-interface TokenAttr {
+interface DBResTkn {
   id: string,
   userId: string,
   token: string,
@@ -19,7 +19,7 @@ interface TokenAttr {
   createdAt: Date,
 }
 
-interface SocialNetworkAttr {
+interface DBResSN {
   id: string,
   userId: string,
   google: string | null,
@@ -27,10 +27,10 @@ interface SocialNetworkAttr {
   facebook: string | null,
 }
 
-type ObjectMapType = {
-  [TNAMES.USR]: UserAttributes;
-  [TNAMES.SCN]: SocialNetworkAttr;
-  [TNAMES.TKN]: TokenAttr;
+type DBRes = {
+  [TNAMES.USR]: DBResUsr;
+  [TNAMES.SCN]: DBResSN;
+  [TNAMES.TKN]: DBResTkn;
 }
 
-export { type ObjectMapType };
+export type { DBRes, DBResTkn };

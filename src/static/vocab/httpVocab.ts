@@ -10,6 +10,7 @@ const httpStatus = {
   cr: 201,
   nc: 204,
   br: 400,
+  ua: 401,
   nf: 404,
   na: 405,
   se: 500,

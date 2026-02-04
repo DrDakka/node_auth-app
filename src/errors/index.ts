@@ -1,3 +1,3 @@
-import { RequestError, DBError, AuthError } from './errors';
+import { RequestError, DBError, AuthError, CustomError } from './errors';
 
-export { RequestError, DBError, AuthError };
+export { RequestError, DBError, AuthError, CustomError };

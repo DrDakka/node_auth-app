@@ -1,7 +1,7 @@
 const endpt = {
   idx: '/',
   auth: '/auth',
-  refr: '/auth/resresh',
+  refr: '/auth/refresh',
   snauth: '/auth/social',
   lgout: '/auth/logout',
   reg: '/register',

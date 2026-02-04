@@ -1,4 +1,4 @@
 import { parseBody } from './bodyParser';
-import { validateAuth, authMiddleware } from './auth';
+import errorHandler from './errorHandler';
 
-export { parseBody, validateAuth, authMiddleware };
+export { parseBody, errorHandler };

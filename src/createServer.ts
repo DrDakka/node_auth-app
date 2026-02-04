@@ -1,14 +1,15 @@
 import http from 'http';
+import { z } from 'zod';
 import { dbSetup } from './db/db';
-import { validateRequest } from './validation';
-import { parseBody, validateAuth } from './middleware';
+import { validateBody, validateRequest } from './validation';
+import { errorHandler, parseBody } from './middleware';
 import getRouteConfig from './router/router';
+import { authTkn } from './controllers';
+import { Ctx } from './static/types';
 
 // Options preflight
 // Unified api response
 // rate limiter mdw
-// cookies parser
-// JSW tokens
 
 export async function createServer() {
   await dbSetup();
@@ -17,21 +18,19 @@ export async function createServer() {
     try {
       const { endpoint, method, param } = validateRequest(req);
 
-      const { auth, schema, controller } = getRouteConfig(endpoint, method);
+      const { auth, schema, ctr } = getRouteConfig(endpoint, method);
+      let usr = null;
 
-      let body = null;
       if (auth) {
-        const authHeader = req.headers.authorization;
-
-        body = validateAuth(authHeader);
+        usr = authTkn(req);
       }
 
-      if (schema) {
-        body = await parseBody(req);
-        validateBody(body, schema);
-      }
+      const body = schema ? validateBody(await parseBody(req), schema) : false;
 
-      const result = controller(body);
-    } catch (error) {}
+      const ctx: Ctx<typeof schema> = { req, res, body, usr, param };
+      ctr(ctx);
+    } catch (e) {
+      errorHandler(res, e);
+    }
   });
 }

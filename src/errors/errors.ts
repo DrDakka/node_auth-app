@@ -1,37 +1,32 @@
 import { httpStatus } from '../static';
 import { type HTTPStatus } from '../static/types';
 
-class RequestError extends Error {
+class CustomError extends Error {
   statusCode: HTTPStatus;
-
-  constructor(message: string, statusCode: HTTPStatus) {
-    super();
+  
+  constructor(message: string, statusCode: HTTPStatus = httpStatus.br) {
+    super(message);
     this.statusCode = statusCode;
     this.name = this.constructor.name;
-    this.message = message;
   }
 }
 
-class DBError extends Error {
-  statusCode: HTTPStatus;
+class RequestError extends CustomError {
+  constructor(message: string, statusCode: HTTPStatus) {
+    super(message, statusCode);
+  }
+}
 
+class DBError extends CustomError {
   constructor(message: string) {
-    super();
-    this.statusCode = httpStatus.se;
-    this.name = this.constructor.name;
-    this.message = message;
+    super(message, httpStatus.se);
   }
 }
 
-class AuthError extends Error {
-  statusCode: HTTPStatus;
-
+class AuthError extends CustomError {
   constructor(message: string) {
-    super();
-    this.statusCode = httpStatus.na;
-    this.name = this.constructor.name;
-    this.message = message;
+    super(message, httpStatus.na);
   }
 }
 
-export { RequestError, DBError, AuthError };
+export { RequestError, DBError, AuthError, CustomError };

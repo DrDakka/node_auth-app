@@ -1,9 +1,9 @@
 import { DBError, RequestError } from '../errors';
 import DB from '../model';
 import { fnames, httpStatus, TNAMES } from '../static';
-import { ObjectMapType } from './types';
+import { DBRes } from './types';
 
-const get = async <T extends TNAMES>(table: T, key: string): Promise<ObjectMapType[T]> => {
+const get = async <T extends TNAMES>(table: T, key: string): Promise<DBRes[T]> => {
   const item = await DB[table].findByPk(key);
 
   if (!item) {
@@ -14,7 +14,7 @@ const get = async <T extends TNAMES>(table: T, key: string): Promise<ObjectMapTy
 };
 
 const del = async (table: TNAMES, key: string): Promise<void> => {
-  // Нужен Model instance для destroy, не plain object
+
   const item = await DB[table].findByPk(key);
 
   if (!item) {
@@ -27,8 +27,8 @@ const del = async (table: TNAMES, key: string): Promise<void> => {
 const getByParam = async <T extends TNAMES>(
   table: T,
   field: (typeof fnames)[T][keyof (typeof fnames)[T]],
-  query: string,
-): Promise<ObjectMapType[T]> => {
+  query: string | boolean,
+): Promise<DBRes[T]> => {
   const item = await DB[table].findOne({ where: { [field as string]: query } });
 
   if (!item) {
