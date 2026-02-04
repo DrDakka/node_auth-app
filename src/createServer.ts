@@ -1,5 +1,4 @@
 import http from 'http';
-import { z } from 'zod';
 import { dbSetup } from './db/db';
 import { validateBody, validateRequest } from './validation';
 import { errorHandler, parseBody } from './middleware';
@@ -9,7 +8,6 @@ import { Ctx } from './static/types';
 
 // Options preflight
 // Unified api response
-// rate limiter mdw
 
 export async function createServer() {
   await dbSetup();
@@ -27,7 +25,14 @@ export async function createServer() {
 
       const body = schema ? validateBody(await parseBody(req), schema) : false;
 
-      const ctx: Ctx<typeof schema> = { req, res, body, usr, param };
+      const ctx: Ctx<typeof schema> = {
+        req,
+        res,
+        body,
+        usr,
+        param,
+      };
+
       ctr(ctx);
     } catch (e) {
       errorHandler(res, e);
