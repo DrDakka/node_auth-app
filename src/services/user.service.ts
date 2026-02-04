@@ -1,13 +1,14 @@
-import { fnames, TNAMES } from '../static';
-import { asyncDBHandler } from '../utils';
-import { del, get, getByParam } from './general.service';
+import { fnames, TNAMES } from '../static/index.ts';
+import { asyncDBHandler } from '../utils/index.ts';
+import { del, get, getByParam } from './general.service.ts';
+
+const a = asyncDBHandler;
 
 const usrServices = {
-  getById: asyncDBHandler((id: string) => get(TNAMES.USR, id)),
-  getByEmail: asyncDBHandler((email: string) =>
-    getByParam(TNAMES.USR, fnames[TNAMES.USR].email, email),
-  ),
-  delete: asyncDBHandler((id: string) => del(TNAMES.USR, id)),
+  getById: a((id: string) => get(TNAMES.USR, id)),
+  // eslint-disable-next-line max-len, prettier/prettier
+  getByEmail: a((e: string) => getByParam(TNAMES.USR, fnames[TNAMES.USR].email, e)),
+  delete: a((id: string) => del(TNAMES.USR, id)),
 };
 
 export default usrServices;

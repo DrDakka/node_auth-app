@@ -1,5 +1,5 @@
 import { z } from 'zod';
-import { fnames, TNAMES } from '../static';
+import { fnames, TNAMES } from '../static/index.ts';
 
 const usrFNames = fnames[TNAMES.USR];
 const tkFNames = fnames[TNAMES.TKN];

@@ -1,9 +1,9 @@
 import http from 'http';
-import { z } from 'zod'
+import { z } from 'zod';
 
-import { type Endpoint } from "./endpoints";
-import { type Method, type HTTPStatus } from "./vocab/httpVocab";
-import { JWTPayload } from '../utils';
+import { type Endpoint } from './endpoints.ts';
+import { type Method, type HTTPStatus } from './vocab/httpVocab.ts';
+import { type JWTPayload } from '../utils/index.ts';
 
 type Ctx<S> = {
   req: http.IncomingMessage;

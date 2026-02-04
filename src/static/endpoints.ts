@@ -12,6 +12,6 @@ const endpt = {
   pwdRes: '/password/reset',
 } as const;
 
-type Endpoint = typeof endpt[keyof typeof endpt]
+type Endpoint = (typeof endpt)[keyof typeof endpt];
 
 export { endpt, type Endpoint };

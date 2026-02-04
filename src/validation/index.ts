@@ -1,4 +1,4 @@
-import validateRequest from './validateRequest';
-import validateBody from './validateBody';
-import sch from './schemas';
+import validateRequest from './validateRequest.ts';
+import validateBody from './validateBody.ts';
+import sch from './schemas.ts';
 export { validateRequest, validateBody, sch };

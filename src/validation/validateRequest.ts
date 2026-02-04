@@ -1,7 +1,7 @@
 import http from 'http';
-import { RequestError } from '../errors';
-import { httpStatus, mthd, endpt } from '../static';
-import { type Method, type Endpoint } from '../static/types';
+import { RequestError } from '../errors/index.ts';
+import { httpStatus, mthd, endpt } from '../static/index.ts';
+import { type Endpoint, type Method } from '../static/types.ts';
 
 const REQUIRED_PARAMS: Partial<Record<Endpoint, string>> = {
   [endpt.act]: 'token',
@@ -20,15 +20,18 @@ function validateRequest(req: http.IncomingMessage) {
   if (!req.url) {
     throw new RequestError('Expected request URL', httpStatus.br);
   }
+
   const url = new URL(req.url, 'http://localhost');
   // validate endpoint
   const endpoint = url.pathname;
+
   if (!validatePath(endpoint)) {
     throw new RequestError('Not found', httpStatus.nf);
   }
 
   // validate method
   const method = req.method;
+
   if (!validateMethod(method)) {
     throw new RequestError(`Unknown method: ${method}`, httpStatus.br);
   }
@@ -36,6 +39,7 @@ function validateRequest(req: http.IncomingMessage) {
   if (!(endpoint in REQUIRED_PARAMS)) {
     return { endpoint, method, param: null };
   }
+
   const param = url.searchParams.get(REQUIRED_PARAMS[endpoint] as string);
 
   if (!param) {

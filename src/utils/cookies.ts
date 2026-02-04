@@ -11,6 +11,7 @@ function parseCookies(req: http.IncomingMessage): Cookies {
       .filter(Boolean)
       .map((c) => {
         const [key, ...val] = c.trim().split('=');
+
         return [key, val.join('=')];
       }),
   );

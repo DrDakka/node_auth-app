@@ -1,6 +1,7 @@
 import http from 'http';
-import { RequestError } from '../errors';
-import { httpStatus } from '../static';
+import { RequestError } from '../errors/index.ts';
+import { httpStatus } from '../static/index.ts';
+
 const maxSizeLimit = 1048576;
 
 async function parseBody(req: http.IncomingMessage, maxSize = maxSizeLimit) {

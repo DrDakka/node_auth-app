@@ -1,10 +1,9 @@
-import { idx, authMan, refresh, logout } from '../controllers';
-import { RequestError } from '../errors';
-import { Endpoint, endpt } from '../static/endpoints';
-import { httpStatus, Method, mthd } from '../static/vocab/httpVocab';
-import sch from '../validation/schemas';
-import { Ctx } from '../static/types';
-
+import { idx, authMan, refresh, logout } from '../controllers/index.ts';
+import { RequestError } from '../errors/index.ts';
+import { type Endpoint, endpt } from '../static/endpoints.ts';
+import { httpStatus, type Method, mthd } from '../static/vocab/httpVocab.ts';
+import { sch } from '../validation/index.ts';
+import { type Ctx } from '../static/types.ts';
 
 type Entr<S extends (typeof sch)[keyof typeof sch] | false> = {
   auth: boolean;
@@ -52,14 +51,14 @@ const routeMap = {
 
 const getRouteConfig = <S extends (typeof sch)[keyof typeof sch] | false>(
   ep: Endpoint,
-  mthd: Method,
+  m: Method,
 ): Entr<S> => {
   const epRoutes = routeMap[ep];
-  const conf = epRoutes[mthd as keyof typeof epRoutes];
+  const conf = epRoutes[m as keyof typeof epRoutes];
 
   if (!conf) {
     throw new RequestError(
-      `Method ${mthd} is not supported for ${ep} endpoint`,
+      `Method ${m} is not supported for ${ep} endpoint`,
       httpStatus.na,
     );
   }

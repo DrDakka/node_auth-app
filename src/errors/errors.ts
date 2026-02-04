@@ -1,9 +1,9 @@
-import { httpStatus } from '../static';
-import { type HTTPStatus } from '../static/types';
+import { httpStatus } from '../static/index.ts';
+import { type HTTPStatus } from '../static/types.ts';
 
 class CustomError extends Error {
   statusCode: HTTPStatus;
-  
+
   constructor(message: string, statusCode: HTTPStatus = httpStatus.br) {
     super(message);
     this.statusCode = statusCode;
@@ -12,6 +12,7 @@ class CustomError extends Error {
 }
 
 class RequestError extends CustomError {
+  // eslint-disable-next-line no-useless-constructor
   constructor(message: string, statusCode: HTTPStatus) {
     super(message, statusCode);
   }

@@ -1,19 +1,19 @@
-import { client } from '../db/db';
+import { client } from '../db/db.ts';
 import { DataTypes } from 'sequelize';
-import { TNAMES, fnames } from '../static'
+import { TNAMES, fnames } from '../static/index.ts';
 
-const nms = fnames[TNAMES.SCN]
+const nms = fnames[TNAMES.SCN];
 
 const SocialAccount = client.define(
   'SocialAccount',
   {
     [nms.id]: {
-      type: DataTypes.UUIDV4,
+      type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },
     [nms.usr]: {
-      type: DataTypes.UUIDV4,
+      type: DataTypes.UUID,
       allowNull: false,
       references: {
         model: TNAMES.USR,

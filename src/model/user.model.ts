@@ -1,6 +1,6 @@
-import { client } from '../db/db';
+import { client } from '../db/db.ts';
 import { DataTypes } from 'sequelize';
-import { TNAMES, fnames } from '../static';
+import { TNAMES, fnames } from '../static/index.ts';
 
 const nms = fnames[TNAMES.USR];
 
@@ -8,7 +8,7 @@ const User = client.define(
   'User',
   {
     [nms.id]: {
-      type: DataTypes.UUIDV4,
+      type: DataTypes.UUID,
       primaryKey: true,
       defaultValue: DataTypes.UUIDV4,
     },

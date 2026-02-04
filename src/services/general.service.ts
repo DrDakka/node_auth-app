@@ -1,9 +1,12 @@
-import { DBError, RequestError } from '../errors';
-import DB from '../model';
-import { fnames, httpStatus, TNAMES } from '../static';
-import { DBRes } from './types';
+import { RequestError } from '../errors/index.ts';
+import DB from '../model/index.ts';
+import { fnames, httpStatus, type Tnames } from '../static/index.ts';
+import { type DBRes } from './types.ts';
 
-const get = async <T extends TNAMES>(table: T, key: string): Promise<DBRes[T]> => {
+const get = async <T extends Tnames>(
+  table: T,
+  key: string,
+): Promise<DBRes[T]> => {
   const item = await DB[table].findByPk(key);
 
   if (!item) {
@@ -13,8 +16,7 @@ const get = async <T extends TNAMES>(table: T, key: string): Promise<DBRes[T]> =
   return item.toJSON();
 };
 
-const del = async (table: TNAMES, key: string): Promise<void> => {
-
+const del = async (table: Tnames, key: string): Promise<void> => {
   const item = await DB[table].findByPk(key);
 
   if (!item) {
@@ -24,7 +26,7 @@ const del = async (table: TNAMES, key: string): Promise<void> => {
   await item.destroy();
 };
 
-const getByParam = async <T extends TNAMES>(
+const getByParam = async <T extends Tnames>(
   table: T,
   field: (typeof fnames)[T][keyof (typeof fnames)[T]],
   query: string | boolean,

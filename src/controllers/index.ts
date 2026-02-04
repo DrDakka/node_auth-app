@@ -1,4 +1,4 @@
-import idx from './idx.ctrlr';
-import { authMan, authTkn, refresh, logout } from './auth.ctrlr';
+import idx from './idx.ctrlr.ts';
+import { authMan, authTkn, refresh, logout } from './auth.ctrlr.ts';
 
 export { idx, authMan, authTkn, refresh, logout };

@@ -1,8 +1,10 @@
-enum  TNAMES {
-  USR = 'users',
-  SCN = 'social_accounts',
-  TKN = 'tokens',
-};
+const TNAMES = {
+  USR: 'users',
+  SCN: 'social_accounts',
+  TKN: 'tokens',
+} as const;
+
+type Tnames = (typeof TNAMES)[keyof typeof TNAMES];
 
 const fnames = {
   [TNAMES.USR]: {
@@ -28,11 +30,14 @@ const fnames = {
   },
 } as const;
 
-enum TKN {
-  ACT = 'activation',
-  RFR = 'refresh',
-  PWR = 'password_reset',
-  ACC = 'access',
-}
+const TKN = {
+  ACT: 'activation',
+  RFR: 'refresh',
+  PWR: 'password_reset',
+  ACC: 'access',
+} as const;
+
+type Tokens = (typeof TKN)[keyof typeof TKN];
 
 export { TNAMES, fnames, TKN };
+export type { Tokens, Tnames };

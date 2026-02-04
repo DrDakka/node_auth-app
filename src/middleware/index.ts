@@ -1,4 +1,4 @@
-import { parseBody } from './bodyParser';
-import errorHandler from './errorHandler';
+import { parseBody } from './bodyParser.ts';
+import errorHandler from './errorHandler.ts';
 
 export { parseBody, errorHandler };

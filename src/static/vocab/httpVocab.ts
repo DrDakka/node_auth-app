@@ -16,7 +16,7 @@ const httpStatus = {
   se: 500,
 } as const;
 
-type Method = typeof mthd[keyof typeof mthd];
-type HTTPStatus = typeof httpStatus[keyof typeof httpStatus];
+type Method = (typeof mthd)[keyof typeof mthd];
+type HTTPStatus = (typeof httpStatus)[keyof typeof httpStatus];
 
 export { mthd, httpStatus, type Method, type HTTPStatus };

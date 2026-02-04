@@ -1,4 +1,4 @@
-import { fnames, TNAMES } from "../static";
+import { fnames, TNAMES } from '../static/index.ts';
 
 const nms = fnames[TNAMES.USR];
 

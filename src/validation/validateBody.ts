@@ -1,6 +1,6 @@
 import { z } from 'zod';
-import { RequestError } from '../errors';
-import { httpStatus } from '../static';
+import { RequestError } from '../errors/index.ts';
+import { httpStatus } from '../static/index.ts';
 
 function validateBody<T extends z.ZodSchema>(
   body: unknown,

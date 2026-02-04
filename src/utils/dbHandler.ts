@@ -1,4 +1,4 @@
-import { DBError } from "../errors";
+import { DBError } from '../errors/index.ts';
 
 function asyncDBHandler<TArgs extends any[], TResult>(
   fn: (...args: TArgs) => Promise<TResult>,
@@ -7,7 +7,9 @@ function asyncDBHandler<TArgs extends any[], TResult>(
     try {
       return await fn(...args);
     } catch (error) {
-      throw new DBError(`Database operation failed: ${error}`);
+      throw new DBError(
+        `Database operation failed: ${error instanceof Error ? error.message : error}`,
+      );
     }
   };
 }

@@ -1,10 +1,10 @@
 import http from 'http';
-import { dbSetup } from './db/db';
-import { validateBody, validateRequest } from './validation';
-import { errorHandler, parseBody } from './middleware';
-import getRouteConfig from './router/router';
-import { authTkn } from './controllers';
-import { Ctx } from './static/types';
+import { dbSetup } from './db/db.ts';
+import { validateBody, validateRequest } from './validation/index.ts';
+import { errorHandler, parseBody } from './middleware/index.ts';
+import getRouteConfig from './router/router.ts';
+import { authTkn } from './controllers/index.ts';
+import { type Ctx } from './static/types.ts';
 
 // Options preflight
 // Unified api response
