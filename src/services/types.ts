@@ -1,23 +1,10 @@
-import { TNAMES, type Tokens } from '../static/index.ts';
-
-interface DBResUsr {
-  id: string;
-  name: string;
-  email: string;
-  password: string;
-  activated: boolean;
-  createdAt: Date;
-  updatedAt: Date;
-}
-
-interface DBResTkn {
-  id: string;
-  userId: string;
-  token: string;
-  type: Tokens;
-  expiresAt: Date;
-  createdAt: Date;
-}
+import type {
+  CreateTKN,
+  CreateUser,
+  DBToken,
+  DBUser,
+} from '../static/types/index.ts';
+import { TNAMES } from '../static/index.ts';
 
 interface DBResSN {
   id: string;
@@ -28,9 +15,14 @@ interface DBResSN {
 }
 
 type DBRes = {
-  [TNAMES.USR]: DBResUsr;
+  [TNAMES.USR]: DBUser;
   [TNAMES.SCN]: DBResSN;
-  [TNAMES.TKN]: DBResTkn;
+  [TNAMES.TKN]: DBToken;
 };
 
-export type { DBRes, DBResTkn };
+type Create = {
+  [TNAMES.USR]: CreateUser;
+  [TNAMES.TKN]: CreateTKN;
+};
+
+export type { DBRes, Create };

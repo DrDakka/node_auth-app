@@ -1,3 +1,1 @@
-import { RequestError, DBError, AuthError, CustomError } from './errors.ts';
-
-export { RequestError, DBError, AuthError, CustomError };
+export { RequestError, DBError, AuthError } from './errors.ts';

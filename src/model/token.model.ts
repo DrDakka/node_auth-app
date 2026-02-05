@@ -22,7 +22,7 @@ const Token = client.define(
       onDelete: 'CASCADE',
     },
     [nms.token]: {
-      type: DataTypes.STRING,
+      type: DataTypes.TEXT,
       allowNull: false,
       unique: true,
     },

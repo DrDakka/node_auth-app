@@ -1,7 +1,7 @@
 import { httpStatus } from '../static/index.ts';
 import { type HTTPStatus } from '../static/types.ts';
 
-class CustomError extends Error {
+class RequestError extends Error {
   statusCode: HTTPStatus;
 
   constructor(message: string, statusCode: HTTPStatus = httpStatus.br) {
@@ -11,23 +11,16 @@ class CustomError extends Error {
   }
 }
 
-class RequestError extends CustomError {
-  // eslint-disable-next-line no-useless-constructor
-  constructor(message: string, statusCode: HTTPStatus) {
-    super(message, statusCode);
-  }
-}
-
-class DBError extends CustomError {
+class DBError extends RequestError {
   constructor(message: string) {
     super(message, httpStatus.se);
   }
 }
 
-class AuthError extends CustomError {
+class AuthError extends RequestError {
   constructor(message: string) {
     super(message, httpStatus.na);
   }
 }
 
-export { RequestError, DBError, AuthError, CustomError };
+export { RequestError, DBError, AuthError };

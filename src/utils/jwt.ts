@@ -5,16 +5,19 @@ import { type JWTPayload } from './types.ts';
 
 const SECRET_KEY = process.env.JWT_SECRET || '7>?~!id(#;fd13/^^$fdkq124<';
 
-type Signed = { expiry: string; token: string };
+type Signed = { expiresAt: string; token: string };
 
 function signToken(payload: JWTPayload, type: Tokens): Signed {
-  const expiry = TOKEN_EXPIRY[type][0];
+  const expiryDuration = TOKEN_EXPIRY[type][0];
+  const expirySeconds = Number(TOKEN_EXPIRY[type][1]);
 
   const token = jwt.sign({ ...payload, type }, SECRET_KEY, {
-    expiresIn: expiry,
+    expiresIn: expiryDuration,
   } as jwt.SignOptions);
 
-  return { expiry, token };
+  const expiresAt = new Date(Date.now() + expirySeconds * 1000).toISOString();
+
+  return { expiresAt, token };
 }
 
 function verifyToken(token: string): JWTPayload & { type: Tokens } {

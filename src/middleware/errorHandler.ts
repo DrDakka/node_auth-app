@@ -1,9 +1,9 @@
 import http from 'http';
 import { httpStatus } from '../static/index.ts';
-import { CustomError } from '../errors/index.ts';
+import { RequestError } from '../errors/index.ts';
 
 function errorHandler(res: http.ServerResponse, e: unknown) {
-  if (e instanceof CustomError) {
+  if (e instanceof RequestError) {
     res.statusCode = e.statusCode;
     res.end(e.message);
 

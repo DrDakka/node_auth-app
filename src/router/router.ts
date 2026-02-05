@@ -1,4 +1,4 @@
-import { idx, authMan, refresh, logout } from '../controllers/index.ts';
+import ctr from '../controllers/index.ts';
 import { RequestError } from '../errors/index.ts';
 import { type Endpoint, endpt } from '../static/endpoints.ts';
 import { httpStatus, type Method, mthd } from '../static/vocab/httpVocab.ts';
@@ -13,39 +13,39 @@ type Entr<S extends (typeof sch)[keyof typeof sch] | false> = {
 
 const routeMap = {
   [endpt.idx]: {
-    [mthd.get]: { auth: false, schema: false, ctr: idx },
+    [mthd.get]: { auth: false, schema: false, ctr: ctr.idx },
   },
   [endpt.auth]: {
-    [mthd.post]: { auth: false, schema: sch.auth, ctr: authMan },
+    [mthd.post]: { auth: false, schema: sch.auth, ctr: ctr.auth.man },
   },
   [endpt.refr]: {
-    [mthd.post]: { auth: false, schema: false, ctr: refresh },
+    [mthd.post]: { auth: false, schema: false, ctr: ctr.auth.rfr },
   },
   [endpt.snauth]: {
     [mthd.post]: { auth: false, schema: false, ctr: () => true },
   },
   [endpt.lgout]: {
-    [mthd.patch]: { auth: true, schema: false, ctr: logout },
+    [mthd.patch]: { auth: true, schema: false, ctr: ctr.auth.lgt },
   },
   [endpt.reg]: {
-    [mthd.post]: { auth: false, schema: sch.reg, ctr: () => true },
+    [mthd.post]: { auth: false, schema: sch.reg, ctr: ctr.reg.reg },
   },
   [endpt.act]: {
-    [mthd.get]: { auth: false, schema: false, ctr: () => true },
+    [mthd.get]: { auth: false, schema: false, ctr: ctr.reg.act },
   },
   [endpt.acc]: {
-    [mthd.get]: { auth: true, schema: false, ctr: () => true },
-    [mthd.del]: { auth: true, schema: false, ctr: () => true },
-    [mthd.patch]: { auth: true, schema: sch.profUpd, ctr: () => true },
+    [mthd.get]: { auth: true, schema: false, ctr: ctr.acc.get },
+    [mthd.del]: { auth: true, schema: false, ctr: ctr.acc.del },
+    [mthd.patch]: { auth: true, schema: sch.profUpd, ctr: ctr.acc.patch },
   },
   [endpt.pwd]: {
-    [mthd.patch]: { auth: true, schema: sch.pwdPtch, ctr: () => true },
+    [mthd.patch]: { auth: true, schema: sch.pwdPtch, ctr: ctr.acc.res },
   },
   [endpt.pwdReq]: {
-    [mthd.post]: { auth: false, schema: sch.pwdReq, ctr: () => true },
+    [mthd.post]: { auth: false, schema: sch.pwdReq, ctr: ctr.res.req },
   },
   [endpt.pwdRes]: {
-    [mthd.post]: { auth: false, schema: sch.newPwd, ctr: () => true },
+    [mthd.post]: { auth: false, schema: sch.newPwd, ctr: ctr.res.prc },
   },
 } as const;
 

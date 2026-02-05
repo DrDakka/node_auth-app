@@ -1,7 +1,8 @@
 import { RequestError } from '../errors/index.ts';
 import DB from '../model/index.ts';
 import { fnames, httpStatus, type Tnames } from '../static/index.ts';
-import { type DBRes } from './types.ts';
+import { aDBH } from '../utils/index.ts';
+import { type Create, type DBRes } from './types.ts';
 
 const get = async <T extends Tnames>(
   table: T,
@@ -10,7 +11,10 @@ const get = async <T extends Tnames>(
   const item = await DB[table].findByPk(key);
 
   if (!item) {
-    throw new RequestError(`Id not found: ${key}`, httpStatus.nf);
+    throw new RequestError(
+      `${table.slice(-1).toUpperCase()} not found: ${key}`,
+      httpStatus.nf,
+    );
   }
 
   return item.toJSON();
@@ -43,4 +47,33 @@ const getByParam = async <T extends Tnames>(
   return item.toJSON();
 };
 
-export { get, del, getByParam };
+const create = async <T extends Exclude<Tnames, 'social_accounts'>>(
+  table: T,
+  data: Create[T],
+): Promise<DBRes[T]> => {
+  const newObj = await DB[table].create({
+    ...data,
+  });
+
+  return newObj.toJSON();
+};
+
+// aDBH = asyncDBHandler, try/catch cover;
+
+const base = {
+  get: aDBH(<T extends Tnames>(t: T, k: string) => get(t, k)),
+  del: aDBH((t: Tnames, k: string) => del(t, k)),
+  getByPrm: aDBH(
+    <T extends Tnames>(
+      t: T,
+      f: (typeof fnames)[T][keyof (typeof fnames)[T]],
+      q: string,
+    ) => getByParam(t, f, q),
+  ),
+  crt: aDBH(
+    <T extends Exclude<Tnames, 'social_accounts'>>(t: T, d: Create[T]) =>
+      create(t, d),
+  ),
+};
+
+export { base };

@@ -1,11 +1,5 @@
-import { fnames, TNAMES } from '../static/index.ts';
+import type { DTOUser } from '../static/types/user.types.ts';
 
-const nms = fnames[TNAMES.USR];
-
-type JWTPayload = {
-  [nms.id]: string;
-  [nms.name]: string;
-  [nms.email]: string;
-};
+type JWTPayload = DTOUser;
 
 export type { JWTPayload };
