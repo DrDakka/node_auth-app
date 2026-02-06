@@ -1,6 +1,6 @@
 import { DBError } from '../errors/index.ts';
 
-function aDBH<TArgs extends any[], TResult>(
+function dbHandler<TArgs extends any[], TResult>(
   fn: (...args: TArgs) => Promise<TResult>,
 ): (...args: TArgs) => Promise<TResult> {
   return async (...args: TArgs): Promise<TResult> => {
@@ -14,4 +14,4 @@ function aDBH<TArgs extends any[], TResult>(
   };
 }
 
-export default aDBH;
+export default dbHandler;

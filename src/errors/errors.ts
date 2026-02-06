@@ -1,5 +1,5 @@
 import { httpStatus } from '../static/index.ts';
-import { type HTTPStatus } from '../static/types.ts';
+import type { HTTPStatus } from '../static/types/index.ts';
 
 class RequestError extends Error {
   statusCode: HTTPStatus;

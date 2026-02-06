@@ -1,18 +1,18 @@
+import dto from '../dto/index.ts';
 import { RequestError } from '../errors/index.ts';
+import { mailTemplate } from '../services/email/email.const.ts';
 import srv from '../services/index.ts';
-import { httpStatus, TKN } from '../static/index.ts';
-import { type Ctx } from '../static/types.ts';
-import { jwtAct } from '../utils/index.ts';
-import sch from '../validation/schemas.ts';
+import { httpStatus, sch, TKN } from '../static/index.ts';
+import type { Ctx } from '../static/types/index.ts';
+import utl from '../utils/index.ts';
+
 import { hashPwd } from './helpers/helpers.ts';
 
 async function register(ctx: Ctx<typeof sch.reg>): Promise<void> {
   const { res, body } = ctx;
   const { name, email, password } = body;
 
-  // check if user exists
-
-  const exists = await srv.usr.existsByEmail(email);
+  const exists = await srv.usr.exBEm(email);
 
   if (exists) {
     throw new RequestError(
@@ -21,35 +21,31 @@ async function register(ctx: Ctx<typeof sch.reg>): Promise<void> {
     );
   }
 
-  // create user
   const hashedPwd = await hashPwd(password);
 
-  const newUsr = await srv.usr.create({
+  const newUsr = await srv.usr.crt({
     name,
     email,
     password: hashedPwd,
   });
 
-  // create activationToken;
-  const payload = { id: newUsr.id, name, email };
-  const actToken = jwtAct.sign(payload, TKN.ACT);
+  const { token, expiresAt } = utl.jwt.sign(dto.usr(newUsr), TKN.ACT);
 
   const createPL = {
     userId: newUsr.id,
-    token: actToken.token,
+    token: token,
     type: TKN.ACT,
-    expiresAt: actToken.expiresAt,
+    expiresAt: expiresAt,
   };
 
-  await srv.tkn.create(createPL);
+  const sent = await srv.eml.sdTM(email, token, mailTemplate.act);
 
-  // send activation email (non-blocking, log errors)
-  srv.email.sendActivation(email, actToken.token).catch((err: Error) => {
-    // eslint-disable-next-line no-console
-    console.error('Failed to send activation email:', err.message);
-  });
+  if (sent) {
+    await srv.tkn.crt(createPL);
+  }
 
   res.statusCode = httpStatus.cr;
+  res.setHeader('Content-Type', 'application/json');
 
   res.end(
     JSON.stringify({
@@ -62,13 +58,22 @@ async function register(ctx: Ctx<typeof sch.reg>): Promise<void> {
 async function activate(ctx: Ctx<false>) {
   const { res, param } = ctx;
 
-  const token = await srv.tkn.getByTkn(param as string);
+  const token = await srv.tkn.gBTkn(param as string);
 
-  await srv.usr.patch(token.userId, { activated: true });
+  if (token.type !== TKN.ACT) {
+    throw new RequestError('Invalid token type', httpStatus.br);
+  }
 
-  await srv.tkn.del(token.id);
+  if (new Date(token.expiresAt) < new Date()) {
+    throw new RequestError('Token expired', httpStatus.br);
+  }
+
+  await srv.usr.ptch(token.userId, { activated: true });
+
+  await srv.tkn.dlt(token.id);
 
   res.statusCode = httpStatus.ok;
+  res.setHeader('Content-Type', 'application/json');
   res.end(JSON.stringify({ message: `Succesfully activated` }));
 }
 

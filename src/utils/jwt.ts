@@ -1,13 +1,13 @@
 import jwt from 'jsonwebtoken';
 import { RequestError } from '../errors/index.ts';
-import { httpStatus, TKN, TOKEN_EXPIRY, type Tokens } from '../static/index.ts';
-import { type JWTPayload } from './types.ts';
+import { httpStatus, TKN, TOKEN_EXPIRY } from '../static/index.ts';
+import type { DTOUser, Tokens } from '../static/types/index.ts';
 
 const SECRET_KEY = process.env.JWT_SECRET || '7>?~!id(#;fd13/^^$fdkq124<';
 
 type Signed = { expiresAt: string; token: string };
 
-function signToken(payload: JWTPayload, type: Tokens): Signed {
+function signToken(payload: DTOUser, type: Tokens): Signed {
   const expiryDuration = TOKEN_EXPIRY[type][0];
   const expirySeconds = Number(TOKEN_EXPIRY[type][1]);
 
@@ -20,9 +20,9 @@ function signToken(payload: JWTPayload, type: Tokens): Signed {
   return { expiresAt, token };
 }
 
-function verifyToken(token: string): JWTPayload & { type: Tokens } {
+function verifyToken(token: string): DTOUser & { type: Tokens } {
   try {
-    const decoded = jwt.verify(token, SECRET_KEY) as JWTPayload & {
+    const decoded = jwt.verify(token, SECRET_KEY) as DTOUser & {
       type: Tokens;
     };
 
@@ -40,14 +40,13 @@ function verifyToken(token: string): JWTPayload & { type: Tokens } {
   }
 }
 
-const jwtAct = {
-  sign: (pl: JWTPayload, tp: Tokens) => signToken(pl, tp),
+const jwtAction = {
+  sign: (pl: DTOUser, tp: Tokens) => signToken(pl, tp),
   ver: (tk: string) => verifyToken(tk),
   create: {
-    [TKN.ACC]: (payload: JWTPayload): Signed => signToken(payload, TKN.ACC),
-    [TKN.RFR]: (payload: JWTPayload): Signed => signToken(payload, TKN.RFR),
+    [TKN.ACC]: (payload: DTOUser): Signed => signToken(payload, TKN.ACC),
+    [TKN.RFR]: (payload: DTOUser): Signed => signToken(payload, TKN.RFR),
   },
 };
 
-export default jwtAct;
-export type { JWTPayload };
+export default jwtAction;

@@ -17,4 +17,4 @@ function parseCookies(req: http.IncomingMessage): Cookies {
   );
 }
 
-export { parseCookies };
+export default parseCookies;

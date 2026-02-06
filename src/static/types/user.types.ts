@@ -8,13 +8,10 @@ interface DBUser {
   updatedAt: Date;
 }
 
-type DTOUser = Omit<
-  DBUser,
-  'password' | 'activated' | 'createdAt' | 'updatedAt'
->;
+type DTOUser = Pick<DBUser, 'id' | 'name' | 'email'>;
 
 type PatchUser = Omit<DBUser, 'id' | 'createdAt' | 'updatedAt'>;
 
-type CreateUser = Omit<DBUser, 'id' | 'activated' | 'createdAt' | 'updatedAt'>;
+type CreateUser = Pick<DBUser, 'name' | 'email' | 'password'>;
 
 export type { DBUser, DTOUser, PatchUser, CreateUser };

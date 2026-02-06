@@ -1,8 +1,24 @@
-import { RequestError } from '../errors/index.ts';
+import { DBError, RequestError } from '../errors/index.ts';
 import DB from '../model/index.ts';
-import { fnames, httpStatus, type Tnames } from '../static/index.ts';
-import { aDBH } from '../utils/index.ts';
-import { type Create, type DBRes } from './types.ts';
+import { fnames, httpStatus } from '../static/index.ts';
+import type { Create, DBRes, Tnames, Fnames } from '../static/types/index.ts';
+
+function dbHandler<TArgs extends any[], TResult>(
+  fn: (...args: TArgs) => Promise<TResult>,
+): (...args: TArgs) => Promise<TResult> {
+  return async (...args: TArgs): Promise<TResult> => {
+    try {
+      return await fn(...args);
+    } catch (e) {
+      if (e instanceof RequestError) {
+        throw e;
+      }
+      throw new DBError(
+        `Database operation failed: ${e instanceof Error ? e.message : e}`,
+      );
+    }
+  };
+}
 
 const get = async <T extends Tnames>(
   table: T,
@@ -20,19 +36,19 @@ const get = async <T extends Tnames>(
   return item.toJSON();
 };
 
-const del = async (table: Tnames, key: string): Promise<void> => {
-  const item = await DB[table].findByPk(key);
+const del = async (table: Tnames, id: string): Promise<void> => {
+  const deleted = await DB[table].destroy({
+    where: { [fnames[table].id]: id },
+  });
 
-  if (!item) {
-    throw new RequestError(`Id not found: ${key}`, httpStatus.nf);
+  if (deleted === 0) {
+    throw new RequestError(`Id not found: ${id}`, httpStatus.nf);
   }
-
-  await item.destroy();
 };
 
 const getByParam = async <T extends Tnames>(
   table: T,
-  field: (typeof fnames)[T][keyof (typeof fnames)[T]],
+  field: Fnames<T>,
   query: string | boolean,
 ): Promise<DBRes[T]> => {
   const item = await DB[table].findOne({ where: { [field as string]: query } });
@@ -61,19 +77,10 @@ const create = async <T extends Exclude<Tnames, 'social_accounts'>>(
 // aDBH = asyncDBHandler, try/catch cover;
 
 const base = {
-  get: aDBH(<T extends Tnames>(t: T, k: string) => get(t, k)),
-  del: aDBH((t: Tnames, k: string) => del(t, k)),
-  getByPrm: aDBH(
-    <T extends Tnames>(
-      t: T,
-      f: (typeof fnames)[T][keyof (typeof fnames)[T]],
-      q: string,
-    ) => getByParam(t, f, q),
-  ),
-  crt: aDBH(
-    <T extends Exclude<Tnames, 'social_accounts'>>(t: T, d: Create[T]) =>
-      create(t, d),
-  ),
+  get: dbHandler(get),
+  del: dbHandler(del),
+  gBPrm: dbHandler(getByParam),
+  crt: dbHandler(create),
 };
 
-export { base };
+export { base, dbHandler };

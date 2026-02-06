@@ -1,9 +1,8 @@
 import DB from '../model/index.ts';
 import { fnames, TNAMES } from '../static/index.ts';
-import type { PatchUser } from '../static/types/index.ts';
-import aDBH from '../utils/dbHandler.ts';
-import { base } from './repo.service.ts';
-import type { Create } from './types.ts';
+import { base, dbHandler } from './repo.service.ts';
+import type { Create, PatchUser } from '../static/types/index.ts';
+import { RequestError } from '../errors/index.ts';
 
 async function patchUser(id: string, payload: Partial<PatchUser>) {
   const user = await base.get(TNAMES.USR, id);
@@ -14,21 +13,23 @@ async function patchUser(id: string, payload: Partial<PatchUser>) {
 }
 
 const usr = {
-  getById: (id: string) => base.get(TNAMES.USR, id),
-  getByEmail: (e: string) =>
-    base.getByPrm(TNAMES.USR, fnames[TNAMES.USR].email, e),
-  delete: (id: string) => base.del(TNAMES.USR, id),
-  create: (data: Create[typeof TNAMES.USR]) => base.crt(TNAMES.USR, data),
-  existsByEmail: async (email: string): Promise<boolean> => {
+  gbId: (id: string) => base.get(TNAMES.USR, id),
+  gbEm: (e: string) => base.gBPrm(TNAMES.USR, fnames[TNAMES.USR].email, e),
+  dlt: (id: string) => base.del(TNAMES.USR, id),
+  crt: (data: Create[typeof TNAMES.USR]) => base.crt(TNAMES.USR, data),
+  exBEm: async (email: string): Promise<boolean> => {
     try {
-      await base.getByPrm(TNAMES.USR, fnames[TNAMES.USR].email, email);
+      await base.gBPrm(TNAMES.USR, fnames[TNAMES.USR].email, email);
 
       return true;
-    } catch {
-      return false;
+    } catch (e) {
+      if (e instanceof RequestError) {
+        return false;
+      }
+      throw e;
     }
   },
-  patch: aDBH((id: string, pl: Partial<PatchUser>) => patchUser(id, pl)),
+  ptch: dbHandler((id: string, pl: Partial<PatchUser>) => patchUser(id, pl)),
 };
 
 export default usr;

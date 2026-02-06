@@ -1,14 +1,14 @@
 import http from 'http';
 import { RequestError } from '../errors/index.ts';
-import { httpStatus, mthd, endpt } from '../static/index.ts';
-import { type Endpoint, type Method } from '../static/types.ts';
+import { httpStatus, mthd, ep } from '../static/index.ts';
+import type { Endpoint, Method } from '../static/types/index.ts';
 
 const REQUIRED_PARAMS: Partial<Record<Endpoint, string>> = {
-  [endpt.act]: 'token',
+  [ep.act]: 'token',
 };
 
 const validatePath = (path: string): path is Endpoint => {
-  return Object.values(endpt).some((el) => el === path);
+  return Object.values(ep).some((el) => el === path);
 };
 
 const validateMethod = (method: string | undefined): method is Method => {
@@ -36,6 +36,7 @@ function validateRequest(req: http.IncomingMessage) {
     throw new RequestError(`Unknown method: ${method}`, httpStatus.br);
   }
 
+  // check if ep requires searchparam
   if (!(endpoint in REQUIRED_PARAMS)) {
     return { endpoint, method, param: null };
   }

@@ -1,6 +1,5 @@
 const TNAMES = {
   USR: 'users',
-  SCN: 'social_accounts',
   TKN: 'tokens',
 } as const;
 
@@ -13,13 +12,6 @@ const fnames = {
     email: 'email',
     pwd: 'password',
     act: 'activated',
-  },
-  [TNAMES.SCN]: {
-    id: 'id',
-    usr: 'userId',
-    ggl: 'google',
-    gh: 'github',
-    fb: 'facebook',
   },
   [TNAMES.TKN]: {
     id: 'id',
@@ -37,7 +29,8 @@ const TKN = {
   ACC: 'access',
 } as const;
 
+type Fnames<T extends Tnames> = (typeof fnames)[T][keyof (typeof fnames)[T]];
 type Tokens = (typeof TKN)[keyof typeof TKN];
 
 export { TNAMES, fnames, TKN };
-export type { Tokens, Tnames };
+export type { Tokens, Tnames, Fnames };

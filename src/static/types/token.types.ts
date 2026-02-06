@@ -1,4 +1,5 @@
-import { TKN, type Tokens } from '../index.ts';
+import { TKN } from '../index.ts';
+import type { Tokens } from '../vocab/dbVocab.ts';
 
 interface DBToken {
   id: string;
@@ -9,8 +10,7 @@ interface DBToken {
   createdAt: Date;
 }
 
-interface CreateTKN
-  extends Omit<DBToken, 'id' | 'type' | 'createdAt' | 'expiresAt'> {
+interface CreateTKN extends Pick<DBToken, 'userId' | 'token'> {
   type: Exclude<Tokens, typeof TKN.ACC>;
   expiresAt: string;
 }

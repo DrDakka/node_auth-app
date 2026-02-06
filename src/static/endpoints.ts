@@ -1,17 +1,17 @@
-const endpt = {
+const ep = {
   idx: '/',
   auth: '/auth',
   refr: '/auth/refresh',
-  snauth: '/auth/social',
-  lgout: '/auth/logout',
+  authsn: '/auth/social',
+  lgt: '/auth/logout',
   reg: '/register',
   act: '/register/activate',
-  acc: '/profile',
-  pwd: '/profile/password',
-  pwdReq: '/password/reset-request',
-  pwdRes: '/password/reset',
+  prf: '/profile',
+  pwc: '/profile/password',
+  pwrr: '/password/reset-request',
+  pwrc: '/password/reset',
 } as const;
 
-type Endpoint = (typeof endpt)[keyof typeof endpt];
+type Endpoint = (typeof ep)[keyof typeof ep];
 
-export { endpt, type Endpoint };
+export { ep, type Endpoint };

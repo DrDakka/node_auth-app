@@ -1,67 +1,42 @@
 import http from 'http';
-import bcrypt from 'bcrypt';
-import { dbSetup } from './db/db.ts';
-import { validateBody, validateRequest } from './validation/index.ts';
+import { dbSetup } from './db/index.ts';
+import val from './validation/index.ts';
 import mw from './middleware/index.ts';
-import getRouteConfig from './router/router.ts';
-import { type Ctx } from './static/types.ts';
-import { TNAMES } from './static/index.ts';
-import DB from './model/index.ts';
-
-// Options preflight
-// Unified api response
+import grc from './router/index.ts';
+import type { Ctx } from './static/types/index.ts';
+import utl from './utils/index.ts';
 
 export async function createServer() {
   await dbSetup();
 
-  const createUsr = async (usr: {
-    name: string;
-    email: string;
-    password: string;
-    activated: boolean;
-  }) => {
-    await DB[TNAMES.USR].create({
-      ...usr,
-    });
-  };
-
-  const pwds = ['jdfu70sdf', 'jdddu70sdf', 'jdgfdfd70sdf'];
-  const testUsrs = [
-    {
-      name: 'JohnDoe',
-      email: 'gtlafuk@iksf.fsd',
-      password: await bcrypt.hash(pwds[0], 10),
-      activated: true,
-    },
-    {
-      name: 'Yurgen',
-      email: 'gtlasdk@iksf.fsd',
-      password: await bcrypt.hash(pwds[1], 10),
-      activated: true,
-    },
-    {
-      name: 'JosdnDoe',
-      email: 'gtsdgasfuk@iksf.fsd',
-      password: await bcrypt.hash(pwds[2], 10),
-      activated: true,
-    },
-  ];
-
-  await testUsrs.map((el) => createUsr(el));
-
   return http.createServer(async (req, res) => {
-    try {
-      const { endpoint, method, param } = validateRequest(req);
+    utl.setCors(res);
 
-      const { auth, schema, ctr } = getRouteConfig(endpoint, method);
+    // Handle preflight OPTIONS
+    if (req.method === 'OPTIONS') {
+      res.statusCode = 204;
+      res.end();
+
+      return;
+    }
+
+    try {
+      // validate request
+      const { endpoint, method, param } = val.req(req);
+
+      // get route config from router
+      const { auth, schema, ctr } = grc(endpoint, method);
       let usr = null;
 
+      // check auth token if router auth === true
       if (auth) {
         usr = mw.tokenAuth(req);
       }
 
-      const body = schema ? validateBody(await mw.parseB(req), schema) : false;
+      // validating body by comparing to schema if router schema !== null
+      const body = schema ? val.bd(await mw.parseB(req), schema) : null;
 
+      // creating ctx for controller
       const ctx: Ctx<typeof schema> = {
         req,
         res,
@@ -70,6 +45,7 @@ export async function createServer() {
         param,
       };
 
+      // executing controller fn with ctx payload
       await ctr(ctx);
     } catch (e) {
       mw.error(res, e);

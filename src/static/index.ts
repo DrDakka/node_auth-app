@@ -1,8 +1,13 @@
-import { TNAMES, fnames, TKN } from './vocab/dbVocab.ts';
+import { ep } from './endpoints.ts';
+import { TNAMES, fnames, TKN, Tokens } from './vocab/dbVocab.ts';
 import { mthd, httpStatus } from './vocab/httpVocab.ts';
-import { endpt } from './endpoints.ts';
-import { TOKEN_EXPIRY } from './constants.ts';
-import type { Tokens, Tnames } from './vocab/dbVocab.ts';
+import { sch } from './bodySchemas.ts';
 
-export { TNAMES, TKN, fnames, TOKEN_EXPIRY, mthd, httpStatus, endpt };
-export type { Tokens, Tnames };
+const TOKEN_EXPIRY: Record<Tokens, [string, string]> = {
+  [TKN.ACC]: ['15m', '900'],
+  [TKN.RFR]: ['7d', '604800'],
+  [TKN.ACT]: ['24h', '86400'],
+  [TKN.PWR]: ['1h', '3600'],
+};
+
+export { TNAMES, TKN, fnames, TOKEN_EXPIRY, mthd, httpStatus, ep, sch };

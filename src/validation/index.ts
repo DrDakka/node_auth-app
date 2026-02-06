@@ -1,4 +1,9 @@
 import validateRequest from './validateRequest.ts';
 import validateBody from './validateBody.ts';
-import sch from './schemas.ts';
-export { validateRequest, validateBody, sch };
+
+const val = {
+  req: validateRequest,
+  bd: validateBody,
+};
+
+export default val;
