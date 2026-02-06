@@ -6,7 +6,7 @@ import { httpStatus, sch, TKN } from '../static/index.ts';
 import type { Ctx } from '../static/types/index.ts';
 import utl from '../utils/index.ts';
 
-import { hashPwd } from './helpers/helpers.ts';
+import { handleTokens, hashPwd } from './helpers/helpers.ts';
 
 async function register(ctx: Ctx<typeof sch.reg>): Promise<void> {
   const { res, body } = ctx;
@@ -68,13 +68,17 @@ async function activate(ctx: Ctx<false>) {
     throw new RequestError('Token expired', httpStatus.br);
   }
 
-  await srv.usr.ptch(token.userId, { activated: true });
+  const user = await srv.usr.ptch(token.userId, { activated: true });
 
   await srv.tkn.dlt(token.id);
 
+  const payload = dto.usr(user);
+
+  await handleTokens(res, payload);
+
   res.statusCode = httpStatus.ok;
   res.setHeader('Content-Type', 'application/json');
-  res.end(JSON.stringify({ message: `Succesfully activated` }));
+  res.end(JSON.stringify({ message: 'Activated', user: payload }));
 }
 
 const reg = {

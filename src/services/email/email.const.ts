@@ -3,6 +3,7 @@ import { ep } from '../../static/index.ts';
 const mailTemplate = {
   act: 'activation',
   res: 'pwd reset',
+  emlChg: 'email change',
 } as const;
 
 const activate = (token: string) => {
@@ -31,9 +32,21 @@ const reset = (token: string) => {
   };
 };
 
+const emailChange = (newEmail: string) => {
+  return {
+    subject: 'Email address changed',
+    html: `
+      <h1>Hello!</h1>
+      <p>Your email address has been changed to: <strong>${newEmail}</strong></p>
+      <p>If you did not make this change, please contact support immediately.</p>
+    `,
+  };
+};
+
 const getTemplate = {
   [mailTemplate.act]: activate,
   [mailTemplate.res]: reset,
+  [mailTemplate.emlChg]: emailChange,
 };
 
 export { mailTemplate, getTemplate };

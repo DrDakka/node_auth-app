@@ -1,5 +1,5 @@
 import DB from '../model/index.ts';
-import { fnames, TNAMES } from '../static/index.ts';
+import { fnames, httpStatus, TNAMES } from '../static/index.ts';
 import { base, dbHandler } from './repo.service.ts';
 import type { Create, PatchUser } from '../static/types/index.ts';
 import { RequestError } from '../errors/index.ts';
@@ -23,7 +23,7 @@ const usr = {
 
       return true;
     } catch (e) {
-      if (e instanceof RequestError) {
+      if (e instanceof RequestError && e.statusCode !== httpStatus.se) {
         return false;
       }
       throw e;

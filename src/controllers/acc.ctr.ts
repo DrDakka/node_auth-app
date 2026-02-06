@@ -1,5 +1,6 @@
 import dto from '../dto/index.ts';
 import { RequestError } from '../errors/index.ts';
+import { mailTemplate } from '../services/email/email.const.ts';
 import srv from '../services/index.ts';
 import { httpStatus, TKN, sch } from '../static/index.ts';
 import type { Ctx, DTOUser } from '../static/types/index.ts';
@@ -52,6 +53,10 @@ async function patchAcc(ctx: Ctx<typeof sch.upd>) {
   }
 
   const newUsr = await srv.usr.ptch(user.id, payload);
+
+  if (email && email !== user.email) {
+    await srv.eml.sdTM(user.email, email, mailTemplate.emlChg);
+  }
 
   res.statusCode = httpStatus.ok;
   res.setHeader('Content-Type', 'application/json');

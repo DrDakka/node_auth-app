@@ -29,7 +29,7 @@ function verifyToken(token: string): DTOUser & { type: Tokens } {
     return decoded;
   } catch (error) {
     if (error instanceof jwt.TokenExpiredError) {
-      throw new RequestError('Token has expired', httpStatus.na);
+      throw new RequestError('Token has expired', httpStatus.ua);
     }
 
     if (error instanceof jwt.JsonWebTokenError) {

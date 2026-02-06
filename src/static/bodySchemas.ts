@@ -33,9 +33,14 @@ const profileUpdate = z
         message: 'Invalid email',
       })
       .optional(),
+    confirmEmail: z.string().optional(),
   })
   .refine((data) => data.name || data.email, {
     message: 'At least one field (name or email) is required',
+  })
+  .refine((data) => !data.email || data.confirmEmail === data.email, {
+    message: "Emails don't match",
+    path: ['confirmEmail'],
   });
 
 const passwordUpdate = z
