@@ -19,9 +19,6 @@ const routeMap = {
   [ep.refr]: {
     [mthd.post]: { auth: false, schema: null, ctr: ctr.auth.rfr },
   },
-  [ep.authsn]: {
-    [mthd.post]: { auth: false, schema: null, ctr: () => true },
-  },
   [ep.lgt]: {
     [mthd.patch]: { auth: true, schema: null, ctr: ctr.auth.lgt },
   },

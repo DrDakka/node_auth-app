@@ -2,7 +2,6 @@ const ep = {
   idx: '/',
   auth: '/auth',
   refr: '/auth/refresh',
-  authsn: '/auth/social',
   lgt: '/auth/logout',
   reg: '/register',
   act: '/register/activate',
