@@ -37,8 +37,8 @@ async function handleTokens(res: http.ServerResponse, pl: DTOUser) {
   await srv.tkn.crt(createPayload);
 
   res.setHeader('Set-Cookie', [
-    setTkn(TKN.ACC, accTkn.token, TOKEN_EXPIRY.access[1]),
-    setTkn(TKN.RFR, refTkn.token, TOKEN_EXPIRY.refresh[1]),
+    setTkn(TKN.ACC, accTkn.token, TOKEN_EXPIRY[TKN.ACC][1]),
+    setTkn(TKN.RFR, refTkn.token, TOKEN_EXPIRY[TKN.RFR][1]),
   ]);
 }
 

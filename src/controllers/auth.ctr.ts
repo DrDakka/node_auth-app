@@ -13,7 +13,10 @@ async function manual(ctx: Ctx<typeof sch.auth>): Promise<void> {
   const user = await srv.usr.gbEm(email);
 
   if (!user.activated) {
-    throw new RequestError('Please activate your account before logging in', httpStatus.ua);
+    throw new RequestError(
+      'Please activate your account before logging in',
+      httpStatus.ua,
+    );
   }
 
   // compare pw

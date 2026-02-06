@@ -24,7 +24,7 @@ const dbSetup = async () => {
     const { default: DB } = await import('../model/index.ts');
 
     for (const model of Object.values(DB)) {
-      await model.sync({ force: true });
+      await model.sync();
     }
   } catch (error) {
     throw new DBError(`Database setup failed: ${error}`);
