@@ -1,7 +1,8 @@
 import { ep } from './endpoints.ts';
-import { TNAMES, fnames, TKN, Tokens } from './vocab/dbVocab.ts';
+import { TNAMES, fnames, TKN } from './vocab/dbVocab.ts';
 import { mthd, httpStatus } from './vocab/httpVocab.ts';
 import { sch } from './bodySchemas.ts';
+import type { Tokens } from './types/index.ts';
 
 const TOKEN_EXPIRY: Record<Tokens, [string, string]> = {
   [TKN.ACC]: ['15m', '900'],
